@@ -1,0 +1,94 @@
+body {
+	background: #eeeeee;
+}
+
+
+.btn {
+	background: #C56D01;
+    color: #fff;
+    border: 0;
+}
+
+.btn:hover {
+	background: #af6205;
+    color: #fff;
+}
+
+.section_title_wrap {
+	margin-bottom: 30px;
+}
+.section_title {
+	display: inline-block;
+    font-size: 18px;
+    position: relative;
+    text-transform: uppercase;
+}
+.section_title:after {
+	position: absolute;
+    content: "";
+    bottom: -4px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: #C56D01;
+}
+.app_header {
+	padding: 20px 0;
+    background: #3A3024;
+    color: #fff;
+}
+.logo_text {
+	font-size: 14px;
+    text-transform: uppercase;
+    margin: 0;
+    background: #C56D01;
+    color: #fff;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 400;
+}
+.app_header h1 {
+
+}
+
+.display_map_section {
+	padding: 30px 0;
+}
+.display_map_wrap {
+	margin-bottom: 30px;
+    background: #F5C891;
+    padding: 4px 4px 10px 4px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+#display_map {
+	margin-bottom: 15px;
+}
+.capacity_input {
+	width: 40%;
+}
+
+.origin_location, .all_locations .panel {
+
+}
+.all_locations .location_address {
+	cursor: pointer;
+}
+
+.all_locations {}
+.all_locations  .panel {
+
+}
+
+.optimized_routes_addresses {}
+.optimized_routes_addresses .optimized_routes_address {
+	background: #222;
+    color: #fff;
+    display: inline-block;
+    margin: 2px;
+    padding: 0px 5px;
+    border-radius: 4px;
+}

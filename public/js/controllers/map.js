@@ -16,7 +16,6 @@
 		};
 
 		var mapDiv = document.getElementById('display_map');
-		var dirMapDiv = document.getElementById('direction_map');
 		var calcBtn = document.getElementById('calcBtn');
 
 		var geocoder = new google.maps.Geocoder();
@@ -28,17 +27,14 @@
 			zoom: 10,
 			center: new google.maps.LatLng(23, 90)
 		});
-		var dirMap = new google.maps.Map(dirMapDiv, {
-			zoom: 10,
-			center: new google.maps.LatLng(23, 90)
-		});
+		
 		// directionsDisplay.setMap(map);
 
 		var allLocations = [];
 		vm.originLocation = [];
 		vm.locationStore = {};
 		vm.interDistances = {};
-		vm.capacity = '';
+		vm.capacity = 30;
 
 
 		google.maps.event.addListener(map, 'click', function(e) {
@@ -75,9 +71,19 @@
 			});
 			// allLocations.push(e.latLng);
 		});
-
+		var dirMap;
+		var dirMapDiv;
 		vm.showDirection = function(waypoints) {
-			console.log(waypoints);
+			dirMapDiv = document.getElementById('direction_map');
+			// console.log(dirMapDiv, dirMapDiv.hasChildNodes());
+			if(dirMapDiv && !dirMapDiv.hasChildNodes()) {
+				console.log('test');
+				dirMap = new google.maps.Map(dirMapDiv, {
+					zoom: 10,
+					center: new google.maps.LatLng(23, 90)
+				});
+			};
+
 			directionsDisplay.setMap(dirMap);
 			var request = {
 				origin: vm.originLocation[0].latlng,
@@ -92,20 +98,23 @@
 				}
 			});
 		}
-		vm.optimizedRoutes = {};
+		
 
 		vm.calcRoutes = function(interDistances) {
+			vm.optimizedRoutes = {};
 			var demands = {};
+
 			angular.forEach(vm.locationStore, function(val, key) {
 				demands[key] = val.demand
 			});
 			var optRoutes = vrp({
 				interDistances: interDistances,
 				demands: demands,
-				capacity: 40
+				capacity: vm.capacity
 			});
 			angular.forEach(optRoutes, function(routes) {
 				vm.optimizedRoutes[routes] = {
+					addresses: [],
 					waypoints: []
 				};
 				var locations = routes.split('');
@@ -115,6 +124,7 @@
 						location: vm.locationStore[locKey].latlng,
 						stopover: true
 					});
+					vm.optimizedRoutes[routes].addresses.push(vm.locationStore[locKey].address);
 				});
 			});
 			console.log(optRoutes);

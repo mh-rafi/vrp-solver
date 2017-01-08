@@ -12,35 +12,72 @@
 	<script src="js/controllers/map.js"></script>
 </head>
 <body>
+	<header class="app_header">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4">
+					<h1 class="logo_text">Single depot VRP Solver</h1>
+				</div>
+			</div>
+		</div>
+	</header>
 	<section class="display_map_section" ng-controller="displayMapCtrl as dispMapCtrl">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="origin_location panel" ng-repeat="place in dispMapCtrl.originLocation">
-						 <p><strong>Center: </strong>{{place.address}}</p>
+						 <div class="panel-body">
+						 	<p><strong>Center: </strong>{{place.address}}</p>
+						 </div>
 					</div>
-					<div class="all_locations">
-						<div class="panel" ng-repeat="(key, val) in dispMapCtrl.locationStore">
-							<p>{{val.address}}</p>
-							<div class="form-group">
-								<label>Demand: </label>
-								<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
+					<div class="all_locations row">
+						<div class="col-sm-6" ng-repeat="(key, val) in dispMapCtrl.locationStore">
+							<div class="panel">
+								<div class="panel-body">
+									<p class="location_address" title="{{val.address}}">{{val.address | exerpt}}</p>
+									<div class="form-group">
+										<label>Demand: </label>
+										<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-8">
+
+				<div class="col-sm-8 display_map_wrap">
 					<div id="display_map" style="height: 400px"></div>
-					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()">Calculate route</button>
+					<div class="form-group capacity_input">
+						<label>Capacity: </label>
+						<input type="number" class="form-control" ng-model="dispMapCtrl.capacity">
+					</div>
+					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()">Calculate Routes</button>
 				</div>
-				<div class="col-sm-12">
-					<div class="col-sm-4" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
-						<button class="btn btn-default" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
+
+				<div class="col-sm-12" ng-show="dispMapCtrl.optimizedRoutes">
+					<div class="row">
+						<div class="col-sm-12 section_title_wrap">
+							<h2 class="section_title">Optimized Routes</h2>
+						</div>
+						<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
+							<div class="panel">
+								<div class="panel-body">
+									<div class="optimized_routes_addresses">
+										<span class="optimized_routes_address" 
+										ng-repeat="address in val.addresses">{{address}}</span>
+									</div>
+
+									<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="col-sm-12">
+
+				<div class="col-sm-12" ng-if="dispMapCtrl.optimizedRoutes">
 					<div id="direction_map" style="height: 400px"></div>
 				</div>
+
 			</div>
 		</div>
 	</section>
