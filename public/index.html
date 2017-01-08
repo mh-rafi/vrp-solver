@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="vrp">
+<head>
+	<meta charset="UTF-8">
+	<title>VRP</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/app.css">
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-Vw8qqIhTDPeNUjnorvQokWP4bzz5gBg"></script>
+	<script src="js/vrp.js"></script>
+	<script src="js/plugins/angular/angular.min.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/controllers/map.js"></script>
+</head>
+<body>
+	<section class="display_map_section" ng-controller="displayMapCtrl as dispMapCtrl">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="origin_location panel" ng-repeat="place in dispMapCtrl.originLocation">
+						 <p><strong>Center: </strong>{{place.address}}</p>
+					</div>
+					<div class="all_locations">
+						<div class="panel" ng-repeat="(key, val) in dispMapCtrl.locationStore">
+							<p>{{val.address}}</p>
+							<div class="form-group">
+								<label>Demand: </label>
+								<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<div id="display_map" style="height: 400px"></div>
+					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()">Calculate route</button>
+				</div>
+				<div class="col-sm-12">
+					<div class="col-sm-4" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
+						<button class="btn btn-default" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<div id="direction_map" style="height: 400px"></div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
