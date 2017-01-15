@@ -13,6 +13,43 @@ body {
 	background: #af6205;
     color: #fff;
 }
+.zeroVal {
+    background: #f76262;
+}
+
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    background: rgba(0, 0, 0, .4);
+}
+
+.modal_wrap {
+    position: fixed;
+    padding-top: 20px; 
+    top: 100px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 70%;
+    background: #fff;
+    height: calc(50vh + 80px);
+    
+}
+.modal_wrap .modal_body {
+    height: 50vh;
+    overflow-y: scroll;
+}
+
+.modal_btns {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+}
 
 .section_title_wrap {
 	margin-bottom: 30px;
@@ -84,7 +121,7 @@ body {
 }
 
 .optimized_routes_addresses {}
-.optimized_routes_addresses .optimized_routes_address {
+.optimized_routes_addresses .optimized_routes_address, .address_label {
 	background: #222;
     color: #fff;
     display: inline-block;

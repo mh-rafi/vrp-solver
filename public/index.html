@@ -18,16 +18,27 @@
 				<div class="col-sm-4">
 					<h1 class="logo_text">VRP Solver</h1>
 				</div>
+				<div class="col-sm-8">
+					<a href="/auth/google" class="btn pull-right" ng-if="!isLoggedin">Login With Google</a>
+					<div class="profile_menu pull-right" ng-if="isLoggedin">
+						<h5>{{user.name}}</h5>
+					</div>
+				</div>
 			</div>
 		</div>
 	</header>
 	<section class="display_map_section" ng-controller="displayMapCtrl as dispMapCtrl">
 		<div class="container">
 			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = false">Distance Matrix</button>
+				</div>
+
 				<div class="col-sm-4">
 					<div class="origin_location panel" ng-repeat="place in dispMapCtrl.originLocation">
 						 <div class="panel-body">
 						 	<p><strong>Center: </strong>{{place.address}}</p>
+						 	<button class="btn btn-xs" ng-click="dispMapCtrl.removeOrigin()">X</button>
 						 </div>
 					</div>
 					<div class="all_locations row">
@@ -38,6 +49,7 @@
 									<div class="form-group">
 										<label>Demand: </label>
 										<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
+										<button class="btn btn-xs" ng-click="dispMapCtrl.removeLocation(key)">X</button>
 									</div>
 								</div>
 							</div>
@@ -51,7 +63,8 @@
 						<label>Capacity: </label>
 						<input type="number" class="form-control" ng-model="dispMapCtrl.capacity">
 					</div>
-					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()">Calculate Routes</button>
+					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()" 
+					ng-if="dispMapCtrl.originLocation.length">Calculate Routes</button>
 				</div>
 
 				<div class="col-sm-12" ng-show="dispMapCtrl.optimizedRoutes">
@@ -78,8 +91,37 @@
 					<div id="direction_map" style="height: 400px"></div>
 				</div>
 
+				
 			</div>
 		</div>
+
+		<div class="modal_overlay" ng-show="!dispMapCtrl.isValidDistMatrix"></div>
+		<div class="modal_wrap" ng-show="!dispMapCtrl.isValidDistMatrix">
+			<div class="modal_body">
+				<div class="col-sm-12 interdistances_wrap">
+					<div class="col-sm-3" ng-repeat="(key, val) in dispMapCtrl.interDistances">
+						<div class="panel" ng-class="{zeroVal: dispMapCtrl.interDistances[key] == 0 }">
+							<div class="panel-body">
+								<span class="address_label">{{ key }}</span>
+								<span class="address_label">{{ dispMapCtrl.getAddressText(key[0]) }}</span>
+								<span class="address_label">{{dispMapCtrl.getAddressText(key[1])}}</span>
+								<input type="number" class="form-control" ng-model="dispMapCtrl.interDistances[key]">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 modal_btns">
+				<button class="btn" ng-click="dispMapCtrl.saveSettings()">
+					<span ng-show="!dispMapCtrl.isSaving">Save Data</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
+				</button>
+				<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = true">Cancel</button>
+			</div>
+		</div>
+
+
+
+
 	</section>
 </body>
 </html>

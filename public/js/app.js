@@ -1,6 +1,8 @@
 angular.module('vrp', [])
-	.run(['$rootScope', function($rootScope) {
-
+	.run(['$rootScope', '$http', function($rootScope, $http) {
+		$rootScope.getUser = function() {
+			return $http.get('/api/user/info');
+		};
 	}])
 	.filter('exerpt', [function() {
 		return function(text) {
@@ -8,9 +10,10 @@ angular.module('vrp', [])
 			if (!text)
 				return;
 
-			if(typeof text != 'string')
+			if (typeof text != 'string')
 				text = text.toString();
-			if(text.length > limit) {
+
+			if (text.length > limit) {
 				text = text.substr(0, limit) + '...'
 			}
 

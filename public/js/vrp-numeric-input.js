@@ -9,16 +9,9 @@ var vrp = (function() {
 		};
 
 		function getSibling(pair, item) {
-			var sibling = pair.replace(item, '');
-			if(!isOrigin(sibling))
-				return sibling;
-			else
-				return '';
+			return pair.replace(item, '');
 		};
 
-		function isOrigin(loc) {
-			return loc == 'a';
-		};
 		function XOR(a, b) {
 			return (a || b) && !(a && b);
 		};
@@ -26,9 +19,7 @@ var vrp = (function() {
 		function calcDemand(cycle, newLoc) {
 			var qty = 0;
 			for (var i = 0; i < cycle.length; i++) {
-				var loc = cycle[i];
-				var demand = demands[loc];
-				qty += demand;
+				qty += demands[cycle[i]];
 			};
 			return qty + demands[newLoc];
 		};
@@ -75,9 +66,7 @@ var vrp = (function() {
 			if (edge.indexOf(cycle[cycle.length - 1]) > -1)
 				var pos = edge.indexOf(cycle[cycle.length - 1]) === 0 ? 1 : 0;
 
-			
-
-			return edge[pos]; 
+			return edge[pos]
 		};
 
 		function getEdgeLocToAddPos(cycle, edge) {
@@ -103,9 +92,7 @@ var vrp = (function() {
 			};
 			return keys.reverse();
 		}
-		function arrayItemHas(array, key) {
-			return array.join('').indexOf(key) > -1;
-		};
+
 
 		var savings = {}
 
@@ -118,7 +105,7 @@ var vrp = (function() {
 
 
 		var orderedSavings = sortSavingsKeys(savings);
-		// console.log(orderedSavings);
+
 
 		var joinedCycles = [];
 		// var unJoinedCycles = [];
@@ -128,8 +115,6 @@ var vrp = (function() {
 		var knockedOut;
 
 		for (var i = 0; i < orderedSavings.length; i++) {
-			
-
 			// console.log('\n', '=================== >>>>> ====================');
 
 			var edge = orderedSavings[i];
@@ -141,11 +126,9 @@ var vrp = (function() {
 				joinedCycles.push(edge);
 				joinedLocs = edge.split('');
 			} else {
-
 				// console.log('first loop i = %s , edge = %s', i, edge);
 				for (var j = 0; j < joinedCycles.length; j++) {
 					// console.log('\n', '----------------------------------------');
-					// console.log('joinedCycles ', joinedCycles);
 					if (!knockedOut) {
 						var newCycle;
 						var cycleStr = joinedCycles[j];
@@ -156,22 +139,14 @@ var vrp = (function() {
 						var hasCrossedCapacity = calcDemand(cycleStr, edgeLocToAdd) > capacity;
 						var locNotExists = notExists(cycleStr, edge);
 						var pointInMiddle = getPointInMiddle(cycleStr, edge);
-						var existsInJoinedCycles = arrayItemHas(joinedCycles, edgeLocToAdd);
 						// console.log(cycleStr + '-' + edge + '-'+ calcDemand(cycleStr, edgeLocToAdd) + '-' + i);
 
 						// console.log('Second loop i = %s , j = %s , cycleStr = %s , edge = %s, edgeLocToAdd = %s', i, j, cycleStr, edge, edgeLocToAdd);
 						// console.log('cycleHasEdgeBoth = %s , hasCrossedCapacity = %s , locNotExists = %s , pointInMiddle = %s ',
 						// 	cycleHasEdgeBoth, hasCrossedCapacity, locNotExists, pointInMiddle);
-						if(isOrigin(edgeLocToAdd)) {
-							// console.log('isOrigin');
-							joinedLocs.push(edgeLocToAdd);
-						};
-						
-						if (hasCrossedCapacity) {
-							// console.log('edgeLocToAdd thrown to trash');
+
+						if (hasCrossedCapacity)
 							joinedLocs = joinedLocs.concat(cycleStr.split(''));
-							// joinedLocs.push(edgeLocToAdd);
-						}
 
 						// cycle has both, store in joinedLocs and no need to check with other cycle in joined cycle
 						if (cycleHasEdgeBoth) {
@@ -194,7 +169,7 @@ var vrp = (function() {
 							} else if (posToAdd === 'last') {
 								newCycle = cycleStr + edgeLocToAdd;
 							};
-							// console.log('joinedLocs has edgeLocToAdd ', joinedLocs.indexOf(edgeLocToAdd) > -1);
+
 							if (joinedLocs.indexOf(edgeLocToAdd) === -1) {
 								joinedCycles[j] = newCycle;
 								joinedLocs = joinedLocs.concat(newCycle.split(''));
@@ -232,8 +207,7 @@ var vrp = (function() {
 						if (!isJoined) {
 							// console.log('isJoined condition----------');
 							for (var k = 0; k < cycleToStore.length; k++) {
-
-								if (!arrayItemHas(joinedCycles, cycleToStore[k]) && joinedLocs.indexOf(cycleToStore[k]) === -1) {
+								if (joinedCycles.join('').indexOf(cycleToStore[k]) === -1) {
 									joinedCycles.push(cycleToStore[k]);
 									// console.log('Pushed to joinedCycles', cycleToStore[k]);
 								} else {
@@ -242,11 +216,9 @@ var vrp = (function() {
 							}
 						}
 					}
-					// console.log('joinedCycles ', joinedCycles);
 				}; // End second loop
 			}
-			
-		} // End First loop
+		}
 		// console.log(joinedCycles);
 		return joinedCycles;
 	};
