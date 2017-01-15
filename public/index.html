@@ -21,7 +21,13 @@
 				<div class="col-sm-8">
 					<a href="/auth/google" class="btn pull-right" ng-if="!isLoggedin">Login With Google</a>
 					<div class="profile_menu pull-right" ng-if="isLoggedin">
-						<h5>{{user.name}}</h5>
+						<ul class="right_menu">
+							<li class="user has_submenu"><a href="#">{{user.name}}</a>
+								<ul class="submenu">
+									<li><a href="" ng-click="signout()">Logout</a></li>
+								</ul>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -30,65 +36,86 @@
 	<section class="display_map_section" ng-controller="displayMapCtrl as dispMapCtrl">
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-12">
-					<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = false">Distance Matrix</button>
+
+				<div class="col-sm-12 main_control">
+					<div class="col-sm-8 display_map_wrap">
+						<div id="display_map" style="height: 400px"></div>
+					</div>
+
+					<div class="col-sm-4 right_control">
+						<div class="origin_location_wrap">
+							<div class="origin_location panel" ng-repeat="place in dispMapCtrl.originLocation">
+								<button class="panel_close" ng-click="dispMapCtrl.removeOrigin()">X</button>
+								<div class="panel-body">
+									<p><strong>Center: </strong>{{place.address}}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="right_control_tools">
+							<div class="form-group capacity_input">
+								<label class="text-normal">Capacity: </label>
+								<input type="number" class="form-control" ng-model="dispMapCtrl.capacity">
+							</div>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.getInterDistances()" 
+							ng-if="dispMapCtrl.originLocation.length">Calculate Routes</button>
+							<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = false">Distance Matrix</button>
+							<button class="btn" ng-click="dispMapCtrl.saveSettings()" ng-if="isLoggedin">
+								<span ng-show="!dispMapCtrl.isSaving">Save</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
+							</button>
+						</div>
+
+					</div>
 				</div>
 
-				<div class="col-sm-4">
-					<div class="origin_location panel" ng-repeat="place in dispMapCtrl.originLocation">
-						 <div class="panel-body">
-						 	<p><strong>Center: </strong>{{place.address}}</p>
-						 	<button class="btn btn-xs" ng-click="dispMapCtrl.removeOrigin()">X</button>
-						 </div>
+				
+				<!-- LOCATIONS  -->
+				<div class="all_locations row">
+					<div class="col-sm-12 section_title_wrap">
+						<h2 class="section_title">Locations and Demands</h2>
 					</div>
-					<div class="all_locations row">
-						<div class="col-sm-6" ng-repeat="(key, val) in dispMapCtrl.locationStore">
-							<div class="panel">
-								<div class="panel-body">
-									<p class="location_address" title="{{val.address}}">{{val.address | exerpt}}</p>
-									<div class="form-group">
-										<label>Demand: </label>
-										<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
-										<button class="btn btn-xs" ng-click="dispMapCtrl.removeLocation(key)">X</button>
-									</div>
+					
+
+					<div class="col-sm-3" ng-repeat="(key, val) in dispMapCtrl.locationStore">
+						<div class="panel">
+							<button class="panel_close" ng-click="dispMapCtrl.removeLocation(key)">X</button>
+							<div class="panel-body">
+								<p class="location_address" title="{{val.address}}">{{val.address | exerpt}}</p>
+								<div class="form-group">
+									<label>Demand: </label>
+									<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				
 
-				<div class="col-sm-8 display_map_wrap">
-					<div id="display_map" style="height: 400px"></div>
-					<div class="form-group capacity_input">
-						<label>Capacity: </label>
-						<input type="number" class="form-control" ng-model="dispMapCtrl.capacity">
+				
+				<div id="optRoutes" class="row" ng-show="dispMapCtrl.optimizedRoutes">
+					<div class="col-sm-12 section_title_wrap">
+						<h2 class="section_title">Optimized Routes</h2>
 					</div>
-					<button class="btn btn-default" ng-click="dispMapCtrl.getInterDistances()" 
-					ng-if="dispMapCtrl.originLocation.length">Calculate Routes</button>
-				</div>
-
-				<div class="col-sm-12" ng-show="dispMapCtrl.optimizedRoutes">
-					<div class="row">
-						<div class="col-sm-12 section_title_wrap">
-							<h2 class="section_title">Optimized Routes</h2>
-						</div>
-						<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
-							<div class="panel">
-								<div class="panel-body">
-									<div class="optimized_routes_addresses">
-										<span class="optimized_routes_address" 
-										ng-repeat="address in val.addresses">{{address}}</span>
-									</div>
-
-									<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
+					<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
+						<div class="panel">
+							<div class="panel-body">
+								<div class="optimized_routes_addresses">
+									<span class="optimized_routes_address" 
+									ng-repeat="address in val.addresses">{{address}}</span>
 								</div>
+
+								<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
 							</div>
 						</div>
 					</div>
 				</div>
+				
 
-				<div class="col-sm-12" ng-if="dispMapCtrl.optimizedRoutes">
-					<div id="direction_map" style="height: 400px"></div>
+				<div class="row" ng-if="dispMapCtrl.optimizedRoutes">
+					<div class="col-sm-12">
+						<p ng-if="dispMapCtrl.totolDistance"><strong>Total distance: </strong>{{dispMapCtrl.totolDistance}} km</p>
+						<div id="direction_map" style="height: 400px"></div>
+					</div>
 				</div>
 
 				
@@ -102,7 +129,6 @@
 					<div class="col-sm-3" ng-repeat="(key, val) in dispMapCtrl.interDistances">
 						<div class="panel" ng-class="{zeroVal: dispMapCtrl.interDistances[key] == 0 }">
 							<div class="panel-body">
-								<span class="address_label">{{ key }}</span>
 								<span class="address_label">{{ dispMapCtrl.getAddressText(key[0]) }}</span>
 								<span class="address_label">{{dispMapCtrl.getAddressText(key[1])}}</span>
 								<input type="number" class="form-control" ng-model="dispMapCtrl.interDistances[key]">
@@ -112,7 +138,7 @@
 				</div>
 			</div>
 			<div class="col-md-12 modal_btns">
-				<button class="btn" ng-click="dispMapCtrl.saveSettings()">
+				<button class="btn" ng-click="dispMapCtrl.saveSettings()" ng-if="isLoggedin">
 					<span ng-show="!dispMapCtrl.isSaving">Save Data</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
 				</button>
 				<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = true">Cancel</button>

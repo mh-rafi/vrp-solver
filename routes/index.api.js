@@ -49,6 +49,7 @@ router.post('/locations', function(req, res) {
 			});
 		};
 
+		user.capacity = req.body.capacity || user.capacity;
 		user.origin = req.body.origin || user.origin;
 		user.locations = req.body.locations || user.locations;
 		user.interdistances = req.body.interdistances || user.interdistances;

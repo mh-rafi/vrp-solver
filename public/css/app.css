@@ -2,21 +2,45 @@ body {
 	background: #eeeeee;
 }
 
-
+.text-normal {
+    font-weight: 400;
+}
 .btn {
-	background: #C56D01;
+	background: #AA1111;
     color: #fff;
     border: 0;
+    border-radius: 1px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3)
 }
-
+.form-control {
+    border-radius: 1px;
+}
 .btn:hover {
-	background: #af6205;
+	background: #AA1111;
     color: #fff;
 }
 .zeroVal {
-    background: #f76262;
+    background: #f76262 !important;
 }
-
+.panel {
+    position: relative;
+    padding-top: 10px;
+    border-radius: 1px;
+    overflow: hidden;
+    border: 0;
+    color: #f9f9f9;
+    background: #383838;
+}
+.panel_close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    background: #dc0000;
+    color: #fff;
+    font-size: 12px;
+    padding: 0px 10px;
+}
 .modal_overlay {
     position: fixed;
     top: 0;
@@ -37,11 +61,11 @@ body {
     margin: auto;
     width: 70%;
     background: #fff;
-    height: calc(50vh + 80px);
+    height: calc(70vh + 80px);
     
 }
 .modal_wrap .modal_body {
-    height: 50vh;
+    height: 70vh;
     overflow-y: scroll;
 }
 
@@ -49,6 +73,46 @@ body {
     position: absolute;
     bottom: 10px;
     left: 0;
+}
+
+.right_menu {
+    list-style: none;
+    margin: 0;
+}
+.right_menu > li > a {
+    color: #fff;
+    padding: 5px 10px;
+}
+
+.right_menu > li > a:hover {
+    text-decoration: none;
+    background: #333;
+}
+
+
+.right_menu li.has_submenu {
+    position: relative;
+}
+.right_menu ul.submenu {
+    position: absolute;
+    display: none;
+    list-style: none;
+    background: #fff;
+    padding: 0;
+    margin: 0;
+    right: 0;
+    bottom: -23px;
+}
+.right_menu > li:hover ul.submenu {
+    display: block;
+}
+.right_menu ul.submenu li a {
+    color: #000;
+    padding: 0 20px;
+}
+.right_menu ul.submenu li a:hover {
+    background: #eeeeee;
+    text-decoration: none;
 }
 
 .section_title_wrap {
@@ -67,18 +131,18 @@ body {
     left: 0;
     width: 60px;
     height: 2px;
-    background: #C56D01;
+    background: #AA1111;
 }
 .app_header {
 	padding: 20px 0;
-    background: #3A3024;
+    background: #000000;
     color: #fff;
 }
 .logo_text {
 	font-size: 14px;
     text-transform: uppercase;
     margin: 0;
-    background: #C56D01;
+    background: #AA1111;
     color: #fff;
     display: inline-block;
     padding: 5px 10px;
@@ -92,25 +156,37 @@ body {
 .display_map_section {
 	padding: 30px 0;
 }
+.main_control {
+    position: relative;
+    color: #f9f9f9;
+    background: #000;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
 .display_map_wrap {
-	margin-bottom: 30px;
-    background: #F5C891;
-    padding: 4px 4px 10px 4px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    padding: 0;
 }
 #display_map {
-	margin-bottom: 15px;
+	
+}
+.right_control {
+    height: 400px;
+}
+.right_control_tools {
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 30px);
 }
 .capacity_input {
-	width: 40%;
+	
 }
 
 .origin_location, .all_locations .panel {
 
 }
+
+
 .all_locations .location_address {
 	cursor: pointer;
 }
@@ -121,11 +197,22 @@ body {
 }
 
 .optimized_routes_addresses {}
+.optimized_routes .panel .btn {
+    margin-top: 15px;
+}
 .optimized_routes_addresses .optimized_routes_address, .address_label {
-	background: #222;
+    background: #4c4c4c;
     color: #fff;
     display: inline-block;
-    margin: 2px;
+    margin: 0 0 11px;
     padding: 0px 5px;
     border-radius: 4px;
+}
+.optimized_routes_addresses .optimized_routes_address:last-child {
+    margin: 0;
+}
+
+.interdistances_wrap {}
+.interdistances_wrap .panel {
+    height: 180px;
 }

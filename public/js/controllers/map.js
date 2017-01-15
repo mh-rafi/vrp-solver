@@ -28,8 +28,13 @@
 			$rootScope.isLoggedin = true;
 
 			var user = res.data;
+			console.log(res.data);
+			if (!user.capacity || !user.origin || !user.locations)
+				return;
+
+			vm.capacity = user.capacity;
 			vm.originLocation.push(user.origin);
-			vm.interDistances = user.interdistances;
+			vm.interDistances = user.interdistances || vm.interDistances;
 			vm.locationStore = user.locations;
 
 			vm.watchDataChange();
@@ -47,7 +52,7 @@
 				// console.log(val.latlng);
 			});
 
-			console.log(res.data);
+			// console.log(res.data);
 			// console.log(locationMarkers);
 
 		}, function(err) {
@@ -96,11 +101,18 @@
 			};
 		});
 
+		vm.isObjEmpty = function(obj) {
+			for (var prop in obj) {
+				if (obj.hasOwnProperty(prop))
+					return false;
+			}
 
+			return JSON.stringify(obj) === JSON.stringify({});
+		};
 		vm.watchDataChange = function() {
-			$scope.$watch(function() {
-				return vm.locationStore;
-			}, function(newVal, oldVal) {
+			$scope.$watch(angular.bind(this, function() {
+				return this.locationStore;
+			}), function(newVal, oldVal) {
 				if (newVal != oldVal) {
 					vm.dataTouched = true;
 					vm.interDistances = {};
@@ -108,7 +120,7 @@
 
 				// console.log('old', oldVal);
 				// console.log('new', newVal);
-				// console.log(newVal == oldVal);
+				console.log('data touched', oldVal === newVal);
 			});
 		};
 		vm.reassignItems = function(items) {
@@ -137,6 +149,7 @@
 		vm.saveSettings = function() {
 			vm.isSaving = true;
 			$http.post('/api/locations', {
+				capacity: vm.capacity,
 				origin: vm.originLocation[0],
 				locations: vm.locationStore,
 				interdistances: vm.interDistances
@@ -175,7 +188,7 @@
 			dirMapDiv = document.getElementById('direction_map');
 			// console.log(dirMapDiv, dirMapDiv.hasChildNodes());
 			if (dirMapDiv && !dirMapDiv.hasChildNodes()) {
-				console.log('test');
+				// console.log('test');
 				dirMap = new google.maps.Map(dirMapDiv, {
 					zoom: 10,
 					center: new google.maps.LatLng(23, 90)
@@ -188,12 +201,22 @@
 				destination: vm.originLocation[0].latlng,
 				travelMode: 'DRIVING',
 				waypoints: waypoints,
-				optimizeWaypoints: true
+				optimizeWaypoints: true,
+				unitSystem: google.maps.UnitSystem.METRIC
 			};
 
 			directionsService.route(request, function(result, status) {
 				if (status == 'OK') {
 					directionsDisplay.setDirections(result);
+					console.log(result);
+					vm.totolDistance = 0;
+					$scope.$apply(function() {
+						angular.forEach(result.routes[0].legs, function(route) {
+							vm.totolDistance += route.distance.value;
+						});
+						vm.totolDistance = parseInt(vm.totolDistance / 1000);
+					});
+					console.log(vm.totolDistance);
 				}
 			});
 		}
@@ -231,7 +254,9 @@
 					vm.optimizedRoutes[routes].addresses.push(vm.locationStore[locKey].address);
 				});
 			});
-
+			setTimeout(function() {
+				smoothScroll('optRoutes');
+			}, 400);
 			console.log(optRoutes);
 			console.log(vm.optimizedRoutes);
 		};
@@ -298,6 +323,12 @@
 		};
 
 		vm.getInterDistances = function() {
+			// console.log('isObjEmpty', vm.isObjEmpty(vm.interDistances));
+			// if($rootScope.isLoggedin && !vm.isObjEmpty(vm.interDistances)) {
+			// 	console.log('from data');
+			// 	return vm.calcRoutes(vm.interDistances);
+			// };
+
 			var allLocations = [];
 			allLocations.push(vm.originLocation[0].latlng);
 
@@ -322,7 +353,7 @@
 				});
 			};
 
-			// MAKE A ARRAY OF LAT LONG OF ALL LOCATIONS
+			// MAKE A ARRAY OF LAT LONG OF ALL LOCATIONS locationsToGoogle
 			angular.forEach(locationsToGoogle, function(val, key) {
 				allLocations.push(val.latlng);
 			});
@@ -332,7 +363,8 @@
 			var request = {
 				origins: allLocations,
 				destinations: allLocations,
-				travelMode: 'DRIVING'
+				travelMode: 'DRIVING',
+				unitSystem: google.maps.UnitSystem.METRIC
 			};
 			distanceMatrix.getDistanceMatrix(request, function(result, status) {
 				if (status == 'OK') {
@@ -354,13 +386,13 @@
 
 							// CONSTRUCT INTER DISTANCE COLLECTION
 							if (!vm.interDistances.hasOwnProperty(reversedDistkey)) {
-								vm.interDistances[distKey] = element.value.distance.value;
+								vm.interDistances[distKey] = element.value.distance.value ? element.value.distance.value / 1000 : 0;
 							}
 						};
 					});
 
 					// console.log(result.rows);
-
+					console.log('from google');
 					// IS LOCATION MORE THAN 7
 					if (isLocNumExceeds) {
 						vm.joinInterDistances(locationToUser, vm.interDistances);
@@ -387,7 +419,60 @@
 					}
 				}
 			});
-		}
+		};
+
+		function currentYPosition() {
+			// Firefox, Chrome, Opera, Safari
+			if (self.pageYOffset) return self.pageYOffset;
+			// Internet Explorer 6 - standards mode
+			if (document.documentElement && document.documentElement.scrollTop)
+				return document.documentElement.scrollTop;
+			// Internet Explorer 6, 7 and 8
+			if (document.body.scrollTop) return document.body.scrollTop;
+			return 0;
+		};
+
+		function elmYPosition(eID) {
+			var elm = document.getElementById(eID);
+			var y = elm.offsetTop;
+			var node = elm;
+			while (node.offsetParent && node.offsetParent != document.body) {
+				node = node.offsetParent;
+				y += node.offsetTop;
+			}
+			return y;
+		};
+
+		function smoothScroll(eID) {
+			var startY = currentYPosition();
+			var stopY = elmYPosition(eID);
+			var distance = stopY > startY ? stopY - startY : startY - stopY;
+			if (distance < 100) {
+				scrollTo(0, stopY);
+				return;
+			}
+			var speed = Math.round(distance / 100);
+			if (speed >= 20) speed = 20;
+			var step = Math.round(distance / 25);
+			var leapY = stopY > startY ? startY + step : startY - step;
+			var timer = 0;
+			if (stopY > startY) {
+				for (var i = startY; i < stopY; i += step) {
+					setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+					leapY += step;
+					if (leapY > stopY) leapY = stopY;
+					timer++;
+				}
+				return;
+			}
+			for (var i = startY; i > stopY; i -= step) {
+				setTimeout("window.scrollTo(0, " + leapY + ")", timer * speed);
+				leapY -= step;
+				if (leapY < stopY) leapY = stopY;
+				timer++;
+			}
+			return false;
+		};
 
 	}];
 

@@ -20,6 +20,7 @@ var User = Schema({
 	phone: String,
 	photo: String,
 	website: String,
+	capacity: Number,
 	origin: Schema.Types.Mixed,
 	locations: Schema.Types.Mixed,
 	interdistances: Schema.Types.Mixed

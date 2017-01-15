@@ -138,8 +138,10 @@ var vrp = (function() {
 			knockedOut = false;
 			if (!joinedCycles.length) {
 				// console.log('first loop first edge', edge);
-				joinedCycles.push(edge);
-				joinedLocs = edge.split('');
+				if(calcDemand(loc1, loc2) <= capacity) {
+					joinedCycles.push(edge);
+					joinedLocs = edge.split('');
+				};
 			} else {
 
 				// console.log('first loop i = %s , edge = %s', i, edge);

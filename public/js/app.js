@@ -3,6 +3,14 @@ angular.module('vrp', [])
 		$rootScope.getUser = function() {
 			return $http.get('/api/user/info');
 		};
+		$rootScope.signout = function() {
+			$http.get('/auth/signout').then(function(res) {
+				$rootScope.user = null;
+				$rootScope.isLoggedin = false;
+			}, function(err) {
+				console.log('signout err', err);
+			});
+		}
 	}])
 	.filter('exerpt', [function() {
 		return function(text) {
