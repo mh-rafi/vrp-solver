@@ -20,6 +20,7 @@
 				</div>
 				<div class="col-sm-8">
 					<a href="/auth/google" class="btn pull-right" ng-if="!isLoggedin">Login With Google</a>
+					<img class="profile_pic pull-right" ng-if="user.photo" ng-src="{{user.photo}}" alt="">
 					<div class="profile_menu pull-right" ng-if="isLoggedin">
 						<ul class="right_menu">
 							<li class="user has_submenu"><a href="#">{{user.name}}</a>
@@ -80,7 +81,7 @@
 						<div class="panel">
 							<button class="panel_close" ng-click="dispMapCtrl.removeLocation(key)">X</button>
 							<div class="panel-body">
-								<p class="location_address" title="{{val.address}}">{{val.address | exerpt}}</p>
+								<p class="location_address" title="{{val.address}}">{{val.address}}</p>
 								<div class="form-group">
 									<label>Demand: </label>
 									<input type="number" class="form-control" ng-model="dispMapCtrl.locationStore[key].demand">

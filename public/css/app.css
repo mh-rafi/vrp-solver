@@ -74,10 +74,15 @@ body {
     bottom: 10px;
     left: 0;
 }
-
+.profile_pic {
+    width: 36px;
+    border-radius: 50%;
+    margin: 0;
+}
 .right_menu {
     list-style: none;
     margin: 0;
+    margin-top: 8px
 }
 .right_menu > li > a {
     color: #fff;
@@ -193,7 +198,7 @@ body {
 
 .all_locations {}
 .all_locations  .panel {
-
+    height: 220px;
 }
 
 .optimized_routes_addresses {}
@@ -214,5 +219,5 @@ body {
 
 .interdistances_wrap {}
 .interdistances_wrap .panel {
-    height: 180px;
+    height: 220px;
 }
