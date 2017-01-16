@@ -1,9 +1,14 @@
 body {
 	background: #eeeeee;
 }
-
+a:focus {
+    text-decoration: none;
+}
 .text-normal {
     font-weight: 400;
+}
+.text-center {
+    text-align: center;
 }
 .btn {
 	background: #AA1111;
@@ -74,6 +79,32 @@ body {
     bottom: 10px;
     left: 0;
 }
+
+
+
+
+.logo_wrap {}
+.logo_text {
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 0;
+    background: #AA1111;
+    color: #fff;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 400;
+}
+.logo_text a {
+    color: #fff;
+}
+.logo_text a:hover {
+    text-decoration: none;
+}
+.logo_text img {
+    width: 32px;
+}
+
 .profile_pic {
     width: 36px;
     border-radius: 50%;
@@ -143,17 +174,7 @@ body {
     background: #000000;
     color: #fff;
 }
-.logo_text {
-	font-size: 14px;
-    text-transform: uppercase;
-    margin: 0;
-    background: #AA1111;
-    color: #fff;
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-weight: 400;
-}
+
 .app_header h1 {
 
 }
@@ -220,4 +241,10 @@ body {
 .interdistances_wrap {}
 .interdistances_wrap .panel {
     height: 220px;
+}
+.site_footer {
+    padding: 15px 0;
+}
+.footer_logo {
+    margin-bottom: 30px;
 }

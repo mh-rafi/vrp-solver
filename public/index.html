@@ -2,7 +2,8 @@
 <html lang="en" ng-app="vrp">
 <head>
 	<meta charset="UTF-8">
-	<title>VRP</title>
+	<title>Vehicle Routing Problem Solver</title>
+	<link rel="shortcut icon" href="images/icon.png" type="image/png">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/app.css">
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-Vw8qqIhTDPeNUjnorvQokWP4bzz5gBg"></script>
@@ -16,7 +17,8 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-4">
-					<h1 class="logo_text">VRP Solver</h1>
+
+					<a href="/"><h1 class="logo_text"><img src="images/trucking.png" alt=""> VRP Solver</h1></a>
 				</div>
 				<div class="col-sm-8">
 					<a href="/auth/google" class="btn pull-right" ng-if="!isLoggedin">Login With Google</a>
@@ -70,8 +72,8 @@
 				</div>
 
 				
-				<!-- LOCATIONS  -->
-				<div class="all_locations row">
+				<!--================ LOCATIONS  ===============-->
+				<div class="all_locations row" ng-show="!dispMapCtrl.isObjEmpty(dispMapCtrl.locationStore)">
 					<div class="col-sm-12 section_title_wrap">
 						<h2 class="section_title">Locations and Demands</h2>
 					</div>
@@ -145,10 +147,18 @@
 				<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = true">Cancel</button>
 			</div>
 		</div>
-
-
-
-
 	</section>
+	<footer class="site_footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center">
+					<div class="footer_logo">
+						<a href="/"><h1 class="logo_text"><img src="images/trucking.png" alt=""> VRP SOLVER</h1></a>
+					</div>
+					<p>&copy; 2017 </p>
+				</div>
+			</div>
+		</div>
+	</footer>
 </body>
 </html>
