@@ -116,7 +116,7 @@
 
 				<div class="row" ng-if="dispMapCtrl.optimizedRoutes">
 					<div class="col-sm-12">
-						<p ng-if="dispMapCtrl.totolDistance"><strong>Total distance: </strong>{{dispMapCtrl.totolDistance}} km</p>
+						<p ng-if="dispMapCtrl.totolDistance"><strong>Total Distance: </strong>{{dispMapCtrl.totolDistance}} km</p>
 						<div id="direction_map" style="height: 400px"></div>
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 			</div>
 		</div>
 
-		<div class="modal_overlay" ng-show="!dispMapCtrl.isValidDistMatrix"></div>
+		<div class="modal_overlay" ng-show="!dispMapCtrl.isValidDistMatrix" ng-click="dispMapCtrl.isValidDistMatrix = true"></div>
 		<div class="modal_wrap" ng-show="!dispMapCtrl.isValidDistMatrix">
 			<div class="modal_body">
 				<div class="col-sm-12 interdistances_wrap">
@@ -147,6 +147,7 @@
 				<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = true">Cancel</button>
 			</div>
 		</div>
+
 	</section>
 	<footer class="site_footer">
 		<div class="container">
@@ -155,7 +156,7 @@
 					<div class="footer_logo">
 						<a href="/"><h1 class="logo_text"><img src="images/trucking.png" alt=""> VRP SOLVER</h1></a>
 					</div>
-					<p>&copy; 2017 </p>
+					<p class="copyright"><a href="https://www.linkedin.com/in/mhrafi" target="_blank">Copyright &copy; 2017</a> </p>
 				</div>
 			</div>
 		</div>

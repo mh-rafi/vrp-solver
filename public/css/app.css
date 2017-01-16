@@ -67,7 +67,7 @@ a:focus {
     width: 70%;
     background: #fff;
     height: calc(70vh + 80px);
-    
+    z-index: 100;
 }
 .modal_wrap .modal_body {
     height: 70vh;
@@ -247,4 +247,8 @@ a:focus {
 }
 .footer_logo {
     margin-bottom: 30px;
+}
+.copyright {}
+.copyright a {
+    color: #222;
 }
