@@ -35,7 +35,7 @@
 			vm.capacity = user.capacity;
 			vm.originLocation.push(user.origin);
 			vm.interDistances = user.interdistances || vm.interDistances;
-			vm.locationStore = user.locations;
+			vm.locationStore = angular.copy(user.locations);
 
 			vm.watchDataChange();
 			// Set origin marker
@@ -100,7 +100,20 @@
 				// console.log(locationMarkers);
 			};
 		});
+		vm.isLocationsSame = function(locs1, locs2) {
+			var locsToIterate = Object.keys(locs1).length >= Object.keys(locs2).length ? locs1 : locs2;
+			var locsToCompare = Object.keys(locs1).length < Object.keys(locs2).length ? locs1 : locs2;
 
+			for (var locKey in locsToIterate) {
+				if(!locsToCompare[locKey]) {
+					return false;
+				};
+				if(locsToIterate[locKey].address !== locsToCompare[locKey].address) {
+					return false;
+				};
+			};
+			return true;
+		};
 		vm.isObjEmpty = function(obj) {
 			for (var prop in obj) {
 				if (obj.hasOwnProperty(prop))
@@ -109,10 +122,24 @@
 
 			return JSON.stringify(obj) === JSON.stringify({});
 		};
+		vm.calcDemand = function(keys) {
+			var totalDemand = 0;
+			for(var i = 0; i < keys.length; i++) {
+				
+				totalDemand += vm.locationStore[keys[i]].demand;
+				// console.log(totalDemand, vm.locationStore[keys[i]].demand);
+			};
+
+			return totalDemand;
+		};
 		vm.watchDataChange = function() {
 			$scope.$watch(angular.bind(this, function() {
-				return this.locationStore;
+				return vm.locationStore;
 			}), function(newVal, oldVal) {
+				console.log('data watch');
+				var newKeys = Object.keys(newVal);
+				var oldKeys = Object.keys(oldVal);
+
 				if (newVal != oldVal) {
 					vm.dataTouched = true;
 					vm.interDistances = {};
@@ -120,7 +147,9 @@
 
 				// console.log('old', oldVal);
 				// console.log('new', newVal);
-				console.log('data touched', oldVal === newVal);
+				// console.log('data touched', oldVal != newVal);
+				console.log('data touched', newKeys.length != oldKeys.length);
+				
 			});
 		};
 		vm.reassignItems = function(items) {
@@ -233,17 +262,21 @@
 				demands[key] = val.demand
 			});
 
+			
 			var optRoutes = vrp({
-				interDistances: interDistances,
-				demands: demands,
-				capacity: vm.capacity
+				interDistances: angular.copy(interDistances),
+				demands: angular.copy(demands),
+				capacity: angular.copy(vm.capacity)
 			});
+			
+			console.log('vrp.js output', optRoutes);
 
 			angular.forEach(optRoutes, function(routes) {
 				vm.optimizedRoutes[routes] = {
 					addresses: [],
 					waypoints: []
 				};
+
 				var locations = routes.split('');
 				angular.forEach(locations, function(locKey) {
 					// new google.maps.LatLng(vm.locationStore[locKey].latlng.lat(), vm.locationStore[locKey].latlng.lng())
@@ -254,10 +287,11 @@
 					vm.optimizedRoutes[routes].addresses.push(vm.locationStore[locKey].address);
 				});
 			});
+
 			setTimeout(function() {
 				smoothScroll('optRoutes');
 			}, 400);
-			console.log(optRoutes);
+			
 			console.log(vm.optimizedRoutes);
 		};
 		vm.iterateDistanceMatrixResult = function(result, callback) {
@@ -289,6 +323,7 @@
 			allKeys = allKeys.concat(locationStoreKeys);
 
 			// JOIN locationToUser TO MAIN INTER DISTANCE COLLECTION
+			console.log(allKeys);
 			angular.forEach(allKeys, function(loc1) {
 				angular.forEach(allKeys, function(loc2) {
 					if (loc1 === loc2)
@@ -300,10 +335,11 @@
 					if (interDistances.hasOwnProperty(distKey) || interDistances.hasOwnProperty(reversedDistkey))
 						return;
 
+					
 					interDistances[distKey] = 0;
 				});
 			});
-
+			// console.log(interDistances);
 			// CHECK DISTANCE MATRIX HAS 0 VALUE
 			vm.checkInterDistances(interDistances, function(val, key) {
 				if (val === 0)
@@ -318,16 +354,18 @@
 				vm.interDistances = interDistances;
 			});
 
-			console.log('all keys', allKeys);
+			// console.log('all keys', allKeys);
 			// console.log(vm.interDistances);
 		};
 
 		vm.getInterDistances = function() {
 			// console.log('isObjEmpty', vm.isObjEmpty(vm.interDistances));
-			// if($rootScope.isLoggedin && !vm.isObjEmpty(vm.interDistances)) {
-			// 	console.log('from data');
-			// 	return vm.calcRoutes(vm.interDistances);
-			// };
+			// IF LOGGED IN AND LOCATIONS ARE SAME
+			if($rootScope.isLoggedin && vm.isLocationsSame(vm.locationStore, $rootScope.user.locations)) {
+				console.log('from data');
+				return vm.calcRoutes(vm.interDistances);
+			};
+			// console.log('is same', vm.isLocationsSame(vm.locationStore, $rootScope.user.locations));
 
 			var allLocations = [];
 			allLocations.push(vm.originLocation[0].latlng);
@@ -392,7 +430,7 @@
 					});
 
 					// console.log(result.rows);
-					console.log('from google');
+					// console.log('from google');
 					// IS LOCATION MORE THAN 7
 					if (isLocNumExceeds) {
 						vm.joinInterDistances(locationToUser, vm.interDistances);

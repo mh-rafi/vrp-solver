@@ -106,7 +106,7 @@
 									<span class="optimized_routes_address" 
 									ng-repeat="address in val.addresses">{{address}}</span>
 								</div>
-
+								<h4>Total demand: {{dispMapCtrl.calcDemand(key)}}</h4>
 								<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
 							</div>
 						</div>

@@ -123,7 +123,7 @@ var vrp = (function() {
 
 		for (var d in interDistance) {
 			var reversed = d.split("").reverse().join("");
-			if (d.indexOf('1') === -1 && !savings.hasOwnProperty(reversed)) {
+			if (d.indexOf('a') === -1 && !savings.hasOwnProperty(reversed)) {
 				savings[d] = interDistance['1' + d[0]] + interDistance['1' + d[1]] - interDistance[d];
 			}
 		}
@@ -176,17 +176,17 @@ var vrp = (function() {
 						// console.log('Second loop i = %s , j = %s , cycleStr = %s , edge = %s, edgeLocToAdd = %s', i, j, cycleStr, edge, edgeLocToAdd);
 						// console.log('cycleHasEdgeBoth = %s , hasCrossedCapacity = %s , locNotExists = %s , pointInMiddle = %s ',
 						// 	cycleHasEdgeBoth, hasCrossedCapacity, locNotExists, pointInMiddle);
-						if(isOrigin(edgeLocToAdd)) {
-							// console.log('isOrigin');
-							joinedLocs.push(edgeLocToAdd);
-						};
+						// if(edgeLocToAdd == 'd')
+						// 		debugger;
 						
 						if (hasCrossedCapacity) {
-							// console.log('edgeLocToAdd thrown to trash');
-							joinedLocs = joinedLocs.concat(cycleStr.split(''));
-							// joinedLocs.push(edgeLocToAdd);
-						}
+							// joinedLocs = joinedLocs.concat(cycleStr.split(''));
+						};
 
+						if (demands[edgeLocToAdd] > capacity) {
+							// console.log('edgeLocToAdd thrown to trash');
+							joinedLocs.push(edgeLocToAdd);
+						};
 						// cycle has both, store in joinedLocs and no need to check with other cycle in joined cycle
 						if (cycleHasEdgeBoth) {
 							// console.log('Cycle has both');
@@ -228,23 +228,30 @@ var vrp = (function() {
 								// console.log('not Exists');
 								cycleToStore = edge;
 								isJoined = false;
-							} else if (hasCrossedCapacity && !cycleHasEdgeBoth) {
-								// console.log('has Crossed Capacity');
-								cycleToStore = edgeLocToAdd;
-								isJoined = false;
-							} else if (pointInMiddle) {
-								// console.log('point In Middle')
-								cycleToStore = getSibling(edge, pointInMiddle);
-								knockedOut = true;
-								isJoined = false;
-							} else {
+							} 
+
+							// else if (hasCrossedCapacity && !cycleHasEdgeBoth && demands[edgeLocToAdd] <= capacity) {
+							// 	// console.log('has Crossed Capacity');
+							// 	cycleToStore = edgeLocToAdd;
+							// 	isJoined = false;
+							// } else if (pointInMiddle) {
+							// 	// console.log('point In Middle')
+							// 	cycleToStore = getSibling(edge, pointInMiddle);
+							// 	knockedOut = true;
+							// 	isJoined = false;
+							// } 
+
+							else {
 								// console.log('isJoined = true');
 								isJoined = true;
 							}
+
+
 						}
 
 						if (!isJoined) {
 							// console.log('isJoined condition----------');
+							
 							for (var k = 0; k < cycleToStore.length; k++) {
 
 								if (!arrayItemHas(joinedCycles, cycleToStore[k]) && joinedLocs.indexOf(cycleToStore[k]) === -1) {
