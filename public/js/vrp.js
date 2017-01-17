@@ -107,7 +107,19 @@ var vrp = (function() {
 			return array.join('').indexOf(key) > -1;
 		};
 
-		var savings = {}
+		var savings = {};
+
+		//CHECK DEMAND IS 0
+		for (var locKey in demands) {
+			var demand = demands[locKey];
+			if (demand === 0) {
+				for (var keyPair in interDistance) {
+					if (keyPair.indexOf(locKey) > -1) {
+						delete interDistance[keyPair];
+					}
+				}
+			}
+		};
 
 		for (var d in interDistance) {
 			var reversed = d.split("").reverse().join("");
