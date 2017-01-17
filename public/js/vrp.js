@@ -148,6 +148,9 @@ var vrp = (function() {
 			var loc1 = edge[0];
 			var loc2 = edge[1];
 			knockedOut = false;
+			// if(edge.indexOf('f') > -1)
+			// 	debugger;
+
 			if (!joinedCycles.length) {
 				// console.log('first loop first edge', edge);
 				if(calcDemand(loc1, loc2) <= capacity) {
@@ -176,8 +179,7 @@ var vrp = (function() {
 						// console.log('Second loop i = %s , j = %s , cycleStr = %s , edge = %s, edgeLocToAdd = %s', i, j, cycleStr, edge, edgeLocToAdd);
 						// console.log('cycleHasEdgeBoth = %s , hasCrossedCapacity = %s , locNotExists = %s , pointInMiddle = %s ',
 						// 	cycleHasEdgeBoth, hasCrossedCapacity, locNotExists, pointInMiddle);
-						// if(edgeLocToAdd == 'd')
-						// 		debugger;
+						
 						
 						if (hasCrossedCapacity) {
 							// joinedLocs = joinedLocs.concat(cycleStr.split(''));
@@ -254,7 +256,7 @@ var vrp = (function() {
 							
 							for (var k = 0; k < cycleToStore.length; k++) {
 
-								if (!arrayItemHas(joinedCycles, cycleToStore[k]) && joinedLocs.indexOf(cycleToStore[k]) === -1) {
+								if (!arrayItemHas(joinedCycles, cycleToStore[k]) && joinedLocs.indexOf(cycleToStore[k]) === -1 && demands[cycleToStore[k]] <= capacity) {
 									joinedCycles.push(cycleToStore[k]);
 									// console.log('Pushed to joinedCycles', cycleToStore[k]);
 								} else {

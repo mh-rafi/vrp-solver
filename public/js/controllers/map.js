@@ -100,15 +100,27 @@
 				// console.log(locationMarkers);
 			};
 		});
+		vm.exportData = function() {
+			var text = JSON.stringify({capacity: vm.capacity, locations: vm.locationStore, interdistances: vm.interDistances});
+
+			var a = document.createElement("a");
+			var file = new Blob([text], {
+				type: 'text/plain'
+			});
+			a.href = URL.createObjectURL(file);
+			a.download = 'VRP-data.txt';
+			a.click();
+		};
+
 		vm.isLocationsSame = function(locs1, locs2) {
 			var locsToIterate = Object.keys(locs1).length >= Object.keys(locs2).length ? locs1 : locs2;
 			var locsToCompare = Object.keys(locs1).length < Object.keys(locs2).length ? locs1 : locs2;
 
 			for (var locKey in locsToIterate) {
-				if(!locsToCompare[locKey]) {
+				if (!locsToCompare[locKey]) {
 					return false;
 				};
-				if(locsToIterate[locKey].address !== locsToCompare[locKey].address) {
+				if (locsToIterate[locKey].address !== locsToCompare[locKey].address) {
 					return false;
 				};
 			};
@@ -124,8 +136,8 @@
 		};
 		vm.calcDemand = function(keys) {
 			var totalDemand = 0;
-			for(var i = 0; i < keys.length; i++) {
-				
+			for (var i = 0; i < keys.length; i++) {
+
 				totalDemand += vm.locationStore[keys[i]].demand;
 				// console.log(totalDemand, vm.locationStore[keys[i]].demand);
 			};
@@ -149,7 +161,7 @@
 				// console.log('new', newVal);
 				// console.log('data touched', oldVal != newVal);
 				console.log('data touched', newKeys.length != oldKeys.length);
-				
+
 			});
 		};
 		vm.reassignItems = function(items) {
@@ -262,13 +274,13 @@
 				demands[key] = val.demand
 			});
 
-			
+
 			var optRoutes = vrp({
 				interDistances: angular.copy(interDistances),
 				demands: angular.copy(demands),
 				capacity: angular.copy(vm.capacity)
 			});
-			
+
 			console.log('vrp.js output', optRoutes);
 
 			angular.forEach(optRoutes, function(routes) {
@@ -291,7 +303,7 @@
 			setTimeout(function() {
 				smoothScroll('optRoutes');
 			}, 400);
-			
+
 			console.log(vm.optimizedRoutes);
 		};
 		vm.iterateDistanceMatrixResult = function(result, callback) {
@@ -335,7 +347,7 @@
 					if (interDistances.hasOwnProperty(distKey) || interDistances.hasOwnProperty(reversedDistkey))
 						return;
 
-					
+
 					interDistances[distKey] = 0;
 				});
 			});
@@ -361,7 +373,7 @@
 		vm.getInterDistances = function() {
 			// console.log('isObjEmpty', vm.isObjEmpty(vm.interDistances));
 			// IF LOGGED IN AND LOCATIONS ARE SAME
-			if($rootScope.isLoggedin && vm.isLocationsSame(vm.locationStore, $rootScope.user.locations)) {
+			if ($rootScope.isLoggedin && vm.isLocationsSame(vm.locationStore, $rootScope.user.locations)) {
 				console.log('from data');
 				return vm.calcRoutes(vm.interDistances);
 			};
