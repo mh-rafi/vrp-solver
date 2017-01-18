@@ -230,18 +230,17 @@ var vrp = (function() {
 								// console.log('not Exists');
 								cycleToStore = edge;
 								isJoined = false;
+							} else if (hasCrossedCapacity && !cycleHasEdgeBoth && demands[edgeLocToAdd] <= capacity) {
+								// console.log('has Crossed Capacity');
+								cycleToStore = edgeLocToAdd;
+								isJoined = false;
 							} 
-
-							// else if (hasCrossedCapacity && !cycleHasEdgeBoth && demands[edgeLocToAdd] <= capacity) {
-							// 	// console.log('has Crossed Capacity');
-							// 	cycleToStore = edgeLocToAdd;
-							// 	isJoined = false;
-							// } else if (pointInMiddle) {
-							// 	// console.log('point In Middle')
-							// 	cycleToStore = getSibling(edge, pointInMiddle);
-							// 	knockedOut = true;
-							// 	isJoined = false;
-							// } 
+							// else if (pointInMiddle) {
+							// // 	// console.log('point In Middle')
+							// // 	cycleToStore = getSibling(edge, pointInMiddle);
+							// // 	knockedOut = true;
+							// // 	isJoined = false;
+							// // } 
 
 							else {
 								// console.log('isJoined = true');
