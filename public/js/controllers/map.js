@@ -43,6 +43,7 @@
 				map: map,
 				position: user.origin.latlng
 			});
+			
 			// SET MAP MARKER
 			angular.forEach(user.locations, function(val, key) {
 				locationMarkers[key] = new google.maps.Marker({
@@ -101,7 +102,11 @@
 			};
 		});
 		vm.exportData = function() {
-			var text = JSON.stringify({capacity: vm.capacity, locations: vm.locationStore, interdistances: vm.interDistances});
+			var text = JSON.stringify({
+				capacity: vm.capacity,
+				locations: vm.locationStore,
+				interdistances: vm.interDistances
+			});
 
 			var a = document.createElement("a");
 			var file = new Blob([text], {

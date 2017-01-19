@@ -124,7 +124,7 @@ var vrp = (function() {
 		for (var d in interDistance) {
 			var reversed = d.split("").reverse().join("");
 			if (d.indexOf('a') === -1 && !savings.hasOwnProperty(reversed)) {
-				savings[d] = interDistance['1' + d[0]] + interDistance['1' + d[1]] - interDistance[d];
+				savings[d] = interDistance['a' + d[0]] + interDistance['a' + d[1]] - interDistance[d];
 			}
 		}
 
