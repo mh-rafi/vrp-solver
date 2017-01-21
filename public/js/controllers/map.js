@@ -43,7 +43,7 @@
 				map: map,
 				position: user.origin.latlng
 			});
-			
+
 			// SET MAP MARKER
 			angular.forEach(user.locations, function(val, key) {
 				locationMarkers[key] = new google.maps.Marker({
@@ -103,6 +103,7 @@
 		});
 		vm.exportData = function() {
 			var text = JSON.stringify({
+				origin: vm.originLocation[0],
 				capacity: vm.capacity,
 				locations: vm.locationStore,
 				interdistances: vm.interDistances
@@ -116,7 +117,25 @@
 			a.download = 'VRP-data.txt';
 			a.click();
 		};
+		vm.importData = function() {
+			if(!vm.fileInput)
+				return;
 
+			vm.fileInput = JSON.parse(vm.fileInput);
+			
+			vm.capacity = vm.fileInput.capacity;
+			vm.originLocation = [];
+			vm.originLocation.push(vm.fileInput.origin);
+			vm.interDistances = angular.copy(vm.fileInput.interdistances);
+			vm.locationStore = angular.copy(vm.fileInput.locations);
+
+			console.log(vm.interDistances);
+			vm.isImporting = false;
+		};
+		vm.importSaveData = function() {
+			vm.importData();
+			vm.saveSettings();
+		};
 		vm.isLocationsSame = function(locs1, locs2) {
 			var locsToIterate = Object.keys(locs1).length >= Object.keys(locs2).length ? locs1 : locs2;
 			var locsToCompare = Object.keys(locs1).length < Object.keys(locs2).length ? locs1 : locs2;
@@ -157,7 +176,10 @@
 				var newKeys = Object.keys(newVal);
 				var oldKeys = Object.keys(oldVal);
 
-				if (newVal != oldVal) {
+				if(!$rootScope.user)
+					return;
+
+				if (!vm.isLocationsSame(vm.locationStore, $rootScope.user.locations)) {
 					vm.dataTouched = true;
 					vm.interDistances = {};
 				}
@@ -279,7 +301,11 @@
 				demands[key] = val.demand
 			});
 
-
+			// console.log('vrp.js input', {
+			// 	interDistances: angular.copy(interDistances),
+			// 	demands: angular.copy(demands),
+			// 	capacity: angular.copy(vm.capacity)
+			// });
 			var optRoutes = vrp({
 				interDistances: angular.copy(interDistances),
 				demands: angular.copy(demands),

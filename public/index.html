@@ -61,12 +61,13 @@
 								<input type="number" class="form-control" ng-model="dispMapCtrl.capacity">
 							</div>
 							<button class="btn btn-warning" ng-click="dispMapCtrl.getInterDistances()" 
-							ng-if="dispMapCtrl.originLocation.length">Calculate</button>
-							<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = false">Distance Matrix</button>
-							<button class="btn" ng-click="dispMapCtrl.saveSettings()" ng-if="isLoggedin">
+							ng-if="dispMapCtrl.originLocation.length">Calculate Routes</button>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.isValidDistMatrix = false">Distance Matrix</button>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.saveSettings()" ng-if="isLoggedin">
 								<span ng-show="!dispMapCtrl.isSaving">Save</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
 							</button>
-							<button class="btn" ng-click="dispMapCtrl.exportData()" ng-if="isLoggedin">Export</button>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.exportData()" ng-if="isLoggedin">Export</button>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.isImporting = true">Import</button>
 						</div>
 
 					</div>
@@ -146,6 +147,23 @@
 					<span ng-show="!dispMapCtrl.isSaving">Save Data</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
 				</button>
 				<button class="btn" ng-click="dispMapCtrl.isValidDistMatrix = true">Cancel</button>
+			</div>
+		</div>
+		
+		<!-- IMPORT DATA FORM -->
+		<div class="modal_overlay" ng-show="dispMapCtrl.isImporting" ng-click="dispMapCtrl.isImporting = false"></div>
+		<div class="modal_wrap import_modal" ng-show="dispMapCtrl.isImporting">
+			<div class="modal_body text-center">
+				
+				<input id="fileInput" fileread="dispMapCtrl.fileInput" ng-if="isLoggedin" type="file" value="Import">
+							
+			</div>
+			<div class="col-md-12 modal_btns">
+				<button class="btn" ng-click="dispMapCtrl.importData()" >Import</button>
+				<button class="btn" ng-click="dispMapCtrl.importSaveData()" >
+					<span ng-if="!dispMapCtrl.isSaving">Import And Save</span><span ng-if="dispMapCtrl.isSaving">Importing...</span>
+				</button>
+				<button class="btn" ng-click="dispMapCtrl.isImporting = false">Cancel</button>
 			</div>
 		</div>
 

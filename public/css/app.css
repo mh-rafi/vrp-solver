@@ -69,9 +69,19 @@ a:focus {
     height: calc(70vh + 80px);
     z-index: 100;
 }
+
 .modal_wrap .modal_body {
     height: 70vh;
     overflow-y: scroll;
+}
+
+.modal_wrap.import_modal {
+    width: 40%;
+    height: calc(20vh + 80px);
+}
+.modal_wrap.import_modal .modal_body {
+    height: 20vh;
+    overflow-y: hidden;
 }
 
 .modal_btns {
@@ -204,6 +214,9 @@ a:focus {
     bottom: 0;
     width: calc(100% - 30px);
 }
+.right_control_tools .btn {
+    margin-bottom: 5px;
+}
 .capacity_input {
 	
 }
@@ -242,6 +255,11 @@ a:focus {
 .interdistances_wrap .panel {
     height: 220px;
 }
+
+#fileInput {
+    margin: 40px 15px;
+}
+
 .site_footer {
     padding: 15px 0;
 }

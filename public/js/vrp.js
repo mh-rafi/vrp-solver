@@ -10,7 +10,7 @@ var vrp = (function() {
 
 		function getSibling(pair, item) {
 			var sibling = pair.replace(item, '');
-			if(!isOrigin(sibling))
+			if (!isOrigin(sibling))
 				return sibling;
 			else
 				return '';
@@ -19,6 +19,7 @@ var vrp = (function() {
 		function isOrigin(loc) {
 			return loc == 'a';
 		};
+
 		function XOR(a, b) {
 			return (a || b) && !(a && b);
 		};
@@ -30,6 +31,18 @@ var vrp = (function() {
 				var demand = demands[loc];
 				qty += demand;
 			};
+			if (!newLoc) {
+				return qty;
+			}
+			if (newLoc.length > 1) {
+				for (var j = 0; j < newLoc.length; j++) {
+					var loc = newLoc[j];
+					var demand = demands[loc];
+					qty += demand;
+				};
+				return qty;
+			};
+
 			return qty + demands[newLoc];
 		};
 
@@ -75,9 +88,9 @@ var vrp = (function() {
 			if (edge.indexOf(cycle[cycle.length - 1]) > -1)
 				var pos = edge.indexOf(cycle[cycle.length - 1]) === 0 ? 1 : 0;
 
-			
 
-			return edge[pos]; 
+
+			return edge[pos];
 		};
 
 		function getEdgeLocToAddPos(cycle, edge) {
@@ -103,6 +116,7 @@ var vrp = (function() {
 			};
 			return keys.reverse();
 		}
+
 		function arrayItemHas(array, key) {
 			return array.join('').indexOf(key) > -1;
 		};
@@ -140,7 +154,7 @@ var vrp = (function() {
 		var knockedOut;
 
 		for (var i = 0; i < orderedSavings.length; i++) {
-			
+
 
 			// console.log('\n', '=================== >>>>> ====================');
 
@@ -151,9 +165,11 @@ var vrp = (function() {
 			// if(edge.indexOf('f') > -1)
 			// 	debugger;
 
+
+
 			if (!joinedCycles.length) {
 				// console.log('first loop first edge', edge);
-				if(calcDemand(loc1, loc2) <= capacity) {
+				if (calcDemand(loc1, loc2) <= capacity) {
 					joinedCycles.push(edge);
 					joinedLocs = edge.split('');
 				};
@@ -173,14 +189,15 @@ var vrp = (function() {
 						var hasCrossedCapacity = calcDemand(cycleStr, edgeLocToAdd) > capacity;
 						var locNotExists = notExists(cycleStr, edge);
 						var pointInMiddle = getPointInMiddle(cycleStr, edge);
+
 						var existsInJoinedCycles = arrayItemHas(joinedCycles, edgeLocToAdd);
 						// console.log(cycleStr + '-' + edge + '-'+ calcDemand(cycleStr, edgeLocToAdd) + '-' + i);
 
 						// console.log('Second loop i = %s , j = %s , cycleStr = %s , edge = %s, edgeLocToAdd = %s', i, j, cycleStr, edge, edgeLocToAdd);
 						// console.log('cycleHasEdgeBoth = %s , hasCrossedCapacity = %s , locNotExists = %s , pointInMiddle = %s ',
 						// 	cycleHasEdgeBoth, hasCrossedCapacity, locNotExists, pointInMiddle);
-						
-						
+
+
 						if (hasCrossedCapacity) {
 							// joinedLocs = joinedLocs.concat(cycleStr.split(''));
 						};
@@ -201,7 +218,7 @@ var vrp = (function() {
 							// console.log('############# Cycle has edgeLocToAdd %s', edgeLocToAdd);
 							joinedLocs.push(edgeLocToAdd);
 						};
-
+						// if (i == 8) debugger;
 						if (edgeLocToAdd && !cycleHasEdgeBoth && !hasCrossedCapacity && cycleStr.indexOf(edgeLocToAdd) === -1) {
 							var posToAdd = getEdgeLocToAddPos(cycleStr, edge);
 							// console.log('All condition fullfilled >>>>>>>>>>>>> edgeLocToAdd = %s', edgeLocToAdd);
@@ -210,17 +227,58 @@ var vrp = (function() {
 							} else if (posToAdd === 'last') {
 								newCycle = cycleStr + edgeLocToAdd;
 							};
+
+
 							// console.log('joinedLocs has edgeLocToAdd ', joinedLocs.indexOf(edgeLocToAdd) > -1);
+							// if (joinedLocs.indexOf(edgeLocToAdd) === -1) {
+
+							if (arrayItemHas(joinedCycles, edgeLocToAdd)) {
+								for (var l = 0; l < joinedCycles.length; l++) {
+									var cycleToTest = joinedCycles[l];
+									var edgeLocToAddToTest = getSibling(edge, getEdgeLocToAdd(cycleToTest, edge));
+									var hasCrossedCapacityToTest = calcDemand(cycleStr, cycleToTest) > capacity
+
+									var edgeLocToAddIndex = cycleToTest.indexOf(edgeLocToAdd);
+
+									if (edgeLocToAddToTest === edgeLocToAdd && cycleToTest !== cycleStr && !hasCrossedCapacityToTest) {
+										var canBeJoined = true;
+										if (posToAdd === 'first') {
+											newCycle = cycleToTest + cycleStr;
+										} else if (posToAdd === 'last') {
+											newCycle = cycleStr + cycleToTest;
+										};
+										joinedCycles.splice(joinedCycles.indexOf(cycleToTest), 1);
+									};
+
+								}
+							};
+
 							if (joinedLocs.indexOf(edgeLocToAdd) === -1) {
 								joinedCycles[j] = newCycle;
 								joinedLocs = joinedLocs.concat(newCycle.split(''));
 								// console.log('Second loop, **** joined cycle ******', newCycle);
-
+								// knockedOut = true;
+								canBeJoined = false;
+								// If there is another one point cycle in joinedCycles, we should remove that
+								if (isInArray(joinedCycles, edgeLocToAdd)) {
+									joinedCycles.splice(joinedCycles.indexOf(edgeLocToAdd), 1);
+								};
+							} else if (canBeJoined) {
+								joinedCycles[j] = newCycle;
+								joinedLocs = joinedLocs.concat(newCycle.split(''));
+								// console.log('Second loop, **** joined cycle ******', newCycle);
+								// knockedOut = true;
+								canBeJoined = false;
 								// If there is another one point cycle in joinedCycles, we should remove that
 								if (isInArray(joinedCycles, edgeLocToAdd)) {
 									joinedCycles.splice(joinedCycles.indexOf(edgeLocToAdd), 1);
 								};
 							}
+
+
+							// }
+
+
 
 							isJoined = true;
 							// console.log('A');
@@ -229,19 +287,19 @@ var vrp = (function() {
 							if (locNotExists) {
 								// console.log('not Exists');
 								cycleToStore = edge;
+								// joinedCycles.push(edge);
 								isJoined = false;
 							} else if (hasCrossedCapacity && !cycleHasEdgeBoth && demands[edgeLocToAdd] <= capacity) {
 								// console.log('has Crossed Capacity');
 								cycleToStore = edgeLocToAdd;
 								isJoined = false;
-							} 
+							}
 							// else if (pointInMiddle) {
 							// // 	// console.log('point In Middle')
 							// // 	cycleToStore = getSibling(edge, pointInMiddle);
 							// // 	knockedOut = true;
 							// // 	isJoined = false;
 							// // } 
-
 							else {
 								// console.log('isJoined = true');
 								isJoined = true;
@@ -252,7 +310,7 @@ var vrp = (function() {
 
 						if (!isJoined) {
 							// console.log('isJoined condition----------');
-							
+
 							for (var k = 0; k < cycleToStore.length; k++) {
 
 								if (!arrayItemHas(joinedCycles, cycleToStore[k]) && joinedLocs.indexOf(cycleToStore[k]) === -1 && demands[cycleToStore[k]] <= capacity) {
@@ -267,7 +325,7 @@ var vrp = (function() {
 					// console.log('joinedCycles ', joinedCycles);
 				}; // End second loop
 			}
-			
+
 		} // End First loop
 		// console.log(joinedCycles);
 		return joinedCycles;
