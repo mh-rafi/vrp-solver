@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="css/app.css">
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-Vw8qqIhTDPeNUjnorvQokWP4bzz5gBg"></script>
 	<script src="js/vrp.js"></script>
+	<script src="js/vrpNNM.js"></script>
 	<script src="js/plugins/angular/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/controllers/map.js"></script>
@@ -109,7 +110,7 @@
 									ng-repeat="address in val.addresses">{{address}}</span>
 								</div>
 								<h4>Total demand: {{dispMapCtrl.calcDemand(key)}}</h4>
-								<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get direction</button>
+								<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get Direction</button>
 							</div>
 						</div>
 					</div>

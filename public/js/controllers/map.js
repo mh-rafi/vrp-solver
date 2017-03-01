@@ -312,7 +312,7 @@
 				capacity: angular.copy(vm.capacity)
 			});
 
-			console.log('vrp.js output', optRoutes);
+			// console.log('vrp.js output', optRoutes);
 
 			angular.forEach(optRoutes, function(routes) {
 				vm.optimizedRoutes[routes] = {
