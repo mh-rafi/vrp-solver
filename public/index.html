@@ -40,6 +40,12 @@
 	<section class="display_map_section" ng-controller="displayMapCtrl as dispMapCtrl">
 		<div class="container">
 			<div class="row">
+				<div class="col-sm-12 message_panel">
+					<span ng-if="dispMapCtrl.msgFlags.isOriginSelected === 0">Click and select a origin location on map</span>
+					<span 
+					ng-if="dispMapCtrl.msgFlags.isOriginSelected !== 0"
+					>Select other locations. You have selected {{dispMapCtrl.msgFlags.selectLocationsCount}} locations.</span>
+				</div>
 
 				<div class="col-sm-12 main_control">
 					<div class="col-sm-8 display_map_wrap">
@@ -131,6 +137,10 @@
 		<div class="modal_overlay" ng-show="!dispMapCtrl.isValidDistMatrix" ng-click="dispMapCtrl.isValidDistMatrix = true"></div>
 		<div class="modal_wrap" ng-show="!dispMapCtrl.isValidDistMatrix">
 			<div class="modal_body">
+				<div class="col-sm-12" ng-if="!dispMapCtrl.isValidDistMatrix">
+					<h4>Interdistances</h4>
+					<p>Scroll down and check if you have invalid values. Red box indicates Invalid value.</p>
+				</div>
 				<div class="col-sm-12 interdistances_wrap">
 					<div class="col-sm-3" ng-repeat="(key, val) in dispMapCtrl.interDistances">
 						<div class="panel" ng-class="{zeroVal: dispMapCtrl.interDistances[key] == 0 }">

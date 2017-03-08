@@ -17,6 +17,10 @@
 		vm.locationStore = {};
 		vm.interDistances = {};
 		vm.capacity = 30;
+		vm.msgFlags = {
+			isOriginSelected: 0,
+			selectLocationsCount: 0,
+		};
 
 		var map = new google.maps.Map(mapDiv, {
 			zoom: 7,
@@ -53,8 +57,7 @@
 				// console.log(val.latlng);
 			});
 
-			// console.log(res.data);
-			// console.log(locationMarkers);
+			vm.updateMsgFlags();
 
 		}, function(err) {
 			console.log('isLoggedin err', err);
@@ -73,6 +76,7 @@
 								lng: e.latLng.lng()
 							}
 						});
+						vm.updateMsgFlags();
 						// console.log(vm.originLocation);
 					});
 				});
@@ -92,6 +96,7 @@
 								lng: e.latLng.lng()
 							}
 						};
+						vm.updateMsgFlags();
 					});
 				});
 				locationMarkers[locationKey] = new google.maps.Marker({
@@ -100,7 +105,12 @@
 				});
 				// console.log(locationMarkers);
 			};
+
 		});
+		vm.updateMsgFlags = function() {
+			vm.msgFlags.isOriginSelected = vm.originLocation.length;
+			vm.msgFlags.selectLocationsCount = Object.keys(vm.locationStore).length;
+		}
 		vm.exportData = function() {
 			var text = JSON.stringify({
 				origin: vm.originLocation[0],
@@ -240,6 +250,7 @@
 			vm.originLocation = [];
 			originMarker.setMap(null);
 			originMarker = {};
+			vm.updateMsgFlags();
 		};
 
 		vm.removeLocation = function(key) {
@@ -249,6 +260,7 @@
 
 			vm.locationStore = vm.reassignItems(vm.locationStore);
 			locationMarkers = vm.reassignItems(locationMarkers);
+			vm.updateMsgFlags();
 		};
 		var dirMap;
 		var dirMapDiv;
