@@ -305,7 +305,8 @@
 			vm.calcRoutes(vm.interDistances);
 		};
 		vm.calcRoutes = function(interDistances) {
-			vm.optimizedRoutes = {};
+			vm.optimizedRoutesCW = {};
+			vm.optimizedRoutesNN = {};
 			var demands = {};
 
 			//PREPARE DEMANDS
@@ -318,7 +319,12 @@
 			// 	demands: angular.copy(demands),
 			// 	capacity: angular.copy(vm.capacity)
 			// });
-			var optRoutes = vrp({
+			var optRoutesCW = vrp({
+				interDistances: angular.copy(interDistances),
+				demands: angular.copy(demands),
+				capacity: angular.copy(vm.capacity)
+			});
+			var optRoutesNN = vrpNNM({
 				interDistances: angular.copy(interDistances),
 				demands: angular.copy(demands),
 				capacity: angular.copy(vm.capacity)
@@ -326,8 +332,8 @@
 
 			// console.log('vrp.js output', optRoutes);
 
-			angular.forEach(optRoutes, function(routes) {
-				vm.optimizedRoutes[routes] = {
+			angular.forEach(optRoutesCW, function(routes) {
+				vm.optimizedRoutesCW[routes] = {
 					addresses: [],
 					waypoints: []
 				};
@@ -335,11 +341,28 @@
 				var locations = routes.split('');
 				angular.forEach(locations, function(locKey) {
 					// new google.maps.LatLng(vm.locationStore[locKey].latlng.lat(), vm.locationStore[locKey].latlng.lng())
-					vm.optimizedRoutes[routes].waypoints.push({
+					vm.optimizedRoutesCW[routes].waypoints.push({
 						location: vm.locationStore[locKey].latlng,
 						stopover: true
 					});
-					vm.optimizedRoutes[routes].addresses.push(vm.locationStore[locKey].address);
+					vm.optimizedRoutesCW[routes].addresses.push(vm.locationStore[locKey].address);
+				});
+			});
+
+			angular.forEach(optRoutesNN, function(routes) {
+				vm.optimizedRoutesNN[routes] = {
+					addresses: [],
+					waypoints: []
+				};
+
+				var locations = routes.split('');
+				angular.forEach(locations, function(locKey) {
+					// new google.maps.LatLng(vm.locationStore[locKey].latlng.lat(), vm.locationStore[locKey].latlng.lng())
+					vm.optimizedRoutesNN[routes].waypoints.push({
+						location: vm.locationStore[locKey].latlng,
+						stopover: true
+					});
+					vm.optimizedRoutesNN[routes].addresses.push(vm.locationStore[locKey].address);
 				});
 			});
 
@@ -347,7 +370,8 @@
 				smoothScroll('optRoutes');
 			}, 400);
 
-			console.log(vm.optimizedRoutes);
+			console.log(vm.optimizedRoutesCW);
+			console.log(vm.optimizedRoutesNN);
 		};
 		vm.iterateDistanceMatrixResult = function(result, callback) {
 			angular.forEach(result.rows, function(rowVal, rowKey) {

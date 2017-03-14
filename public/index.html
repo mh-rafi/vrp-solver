@@ -74,7 +74,7 @@
 								<span ng-show="!dispMapCtrl.isSaving">Save</span><span ng-show="dispMapCtrl.isSaving">Saving...</span>
 							</button>
 							<button class="btn btn-warning" ng-click="dispMapCtrl.exportData()" ng-if="isLoggedin">Export</button>
-							<button class="btn btn-warning" ng-click="dispMapCtrl.isImporting = true">Import</button>
+							<button class="btn btn-warning" ng-click="dispMapCtrl.isImporting = true" ng-if="isLoggedin">Import</button>
 						</div>
 
 					</div>
@@ -103,27 +103,61 @@
 				</div>
 				
 
-				
-				<div id="optRoutes" class="row" ng-show="dispMapCtrl.optimizedRoutes">
+				<!-- OPTIMIZED ROUTES -->
+				<div id="optRoutes" class="row" ng-show="dispMapCtrl.optimizedRoutesCW">
 					<div class="col-sm-12 section_title_wrap">
 						<h2 class="section_title">Optimized Routes</h2>
 					</div>
-					<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutes">
-						<div class="panel">
-							<div class="panel-body">
-								<div class="optimized_routes_addresses">
-									<span class="optimized_routes_address" 
-									ng-repeat="address in val.addresses">{{address}}</span>
+
+					<div class="solutions_tab" ng-init="dispMapCtrl.solutionToggle = 0">
+						<div class="tab_buttons">
+							<span 
+							ng-click="dispMapCtrl.solutionToggle = 0"
+							ng-class="{'tab_button_active': dispMapCtrl.solutionToggle == 0}">
+							Clarke and Wright Algorithm</span>
+
+							<span ng-click="dispMapCtrl.solutionToggle = 1"
+							ng-class="{'tab_button_active': dispMapCtrl.solutionToggle == 1}">
+							Nearest Neighboring Algorithm</span>
+						</div>
+
+						<div class="col-sm-12" ng-show="dispMapCtrl.solutionToggle == 0">
+							<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutesCW">
+								<div class="panel">
+									<div class="panel-body">
+										<div class="optimized_routes_addresses">
+											<span class="optimized_routes_address" 
+											ng-repeat="address in val.addresses">{{address}}</span>
+										</div>
+										<h4>Total demand: {{dispMapCtrl.calcDemand(key)}}</h4>
+										<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get Direction</button>
+									</div>
 								</div>
-								<h4>Total demand: {{dispMapCtrl.calcDemand(key)}}</h4>
-								<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get Direction</button>
+							</div>
+						</div>
+						
+						<div class="col-sm-12" ng-show="dispMapCtrl.solutionToggle == 1">
+							<div class="col-sm-4 optimized_routes" ng-repeat="(key, val) in dispMapCtrl.optimizedRoutesNN">
+								<div class="panel">
+									<div class="panel-body">
+										<div class="optimized_routes_addresses">
+											<span class="optimized_routes_address" 
+											ng-repeat="address in val.addresses">{{address}}</span>
+										</div>
+										<h4>Total demand: {{dispMapCtrl.calcDemand(key)}}</h4>
+										<button class="btn btn-warning" ng-click="dispMapCtrl.showDirection(val.waypoints)">Get Direction</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+					
+					
+
 				</div>
 				
-
-				<div class="row" ng-if="dispMapCtrl.optimizedRoutes">
+				<!-- DIRECTION MAP -->
+				<div class="row" ng-if="dispMapCtrl.optimizedRoutesCW">
 					<div class="col-sm-12">
 						<p ng-if="dispMapCtrl.totolDistance"><strong>Total Distance: </strong>{{dispMapCtrl.totolDistance}} km</p>
 						<div id="direction_map" style="height: 400px"></div>
@@ -133,7 +167,8 @@
 				
 			</div>
 		</div>
-
+		
+		<!-- INTERDISTANCES POP UP -->
 		<div class="modal_overlay" ng-show="!dispMapCtrl.isValidDistMatrix" ng-click="dispMapCtrl.isValidDistMatrix = true"></div>
 		<div class="modal_wrap" ng-show="!dispMapCtrl.isValidDistMatrix">
 			<div class="modal_body">
