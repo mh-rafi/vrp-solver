@@ -4,8 +4,7 @@
 https://vrp-solver.herokuapp.com
 
 vehicle routing problem is also known as Salesman traveling problem.
-So one vehicle can supply the maximum amount of products to different locations by traveling minimum distance.
-This software uses Clarke and Wright savings algorithm and nearest neighbor method.
+One vehicle will be able to supply the maximum amount of products to different locations by traveling minimum distance.
 
 ## HOW TO USE (INSTRUCTION)
 ### Step 1
