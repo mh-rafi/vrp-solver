@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/mh-rafi/vrp/master/vrp-thumbnail.jpg)
+
 ## Demo link
 https://vrp-solver.herokuapp.com
 
