@@ -13,34 +13,34 @@ login with your gmail ID. You can use this application without login. We recomme
 ### Step 2
 Click on map and set a center location. A marker will appear on map and location address text will appear at right side of map.
 
-###Step 3: 
+### Step 3: 
 Set vehicle capacity. Value must be numeric
 
-###Step 4: 
+### Step 4: 
 click on map and set destinations. For each destination a marker will appear on map and an address text box with demand input field will appear under the map.
 
-###Step 5: 
+### Step 5: 
 Set demand for each destination. Value must be numeric. Destination with zero value will be excluded from calculation.
 
-###Step 6: 
+### Step 6: 
 Click on “Calculate Routes” button
 
-###Step 7: 
+### Step 7: 
 Optimized routes will appear at the bottom of UI.
 
-###Step 8: 
+### Step 8: 
 By clicking on “Get Direction” button route path will be displayed on map. It will also show total distance in kilometer.
 
 
 This application has data export and import functionality. We can export a data set and import that when we need. This will be helpful when we need to keep track of data monthly/weekly basis.
 
 
-##LIMITATIONS
-*This application is only applicable when there is only one vehicle or all the vehicle with same capacity.
+## LIMITATIONS
+* This application is only applicable when there is only one vehicle or all the vehicle with same capacity.
 
-*Applicable when this is a centralized return center based system.
+* Applicable when this is a centralized return center based system.
 
-*When there is more than 6 destination, the rest of the interdistance matrix must be filled up manually.
+* When there is more than 6 destination, the rest of the interdistance matrix must be filled up manually.
 
     
 
