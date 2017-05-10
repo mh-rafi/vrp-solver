@@ -10,12 +10,12 @@ var session = require('express-session');
 
 var MongoDBStore = require('connect-mongodb-session')(session);
 var sessionStore = new MongoDBStore({
-  uri: 'mongodb://mh_rafi:hasan7234@ds111559.mlab.com:11559/vrp-solver',
+  uri: 'mongodb-connection-url',
   collection: 'userSessions'
 });
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://mh_rafi:hasan7234@ds111559.mlab.com:11559/vrp-solver');
+mongoose.connect('mongodb-connection-url');
 
 var models = require('./models/models');
 var authenticate = require('./auth/authenticate');
@@ -29,7 +29,7 @@ app.set('view engine', 'jade');
 
 app.use(session({
   store: sessionStore,
-  secret: 'you-dont-know-this-secret'
+  secret: 'secret-key'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
